@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="1a954116-a968-481c-b55d-6b616b53e783" name="tstmoodle-ubicast">
+        <fileTransfer accessType="SFTP" host="tstmoodle" port="22" sshConfigId="3d5f78f7-3f85-4816-a2ec-8f111251baf5" sshConfig="nalexand@tstmoodle:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
