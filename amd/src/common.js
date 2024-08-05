@@ -25,6 +25,5 @@ const component = 'tiny_ubicast';
 export default {
     component,
     pluginName: `${component}/plugin`,
-    addIcon: 'add',
-    removeIcon: 'remove',
+    addIcon: 'user',
 };

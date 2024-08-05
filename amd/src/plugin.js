@@ -43,6 +43,15 @@ export default new Promise(async(resolve) => {
         getPluginMetadata(component, pluginName),
     ]);
 
+    // Load the media selector script from Ubicast.
+    if (!window.MediaSelector) {
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = window.M.cfg.wwwroot + '/mod/ubicast/statics/media_selector.js?_=14';
+        document.head.appendChild(script);
+        window.console.log(script);
+    }
+
     // Reminder: Any asynchronous code must be run before this point.
     tinyMCE.PluginManager.add(pluginName, (editor) => {
         // Register options.

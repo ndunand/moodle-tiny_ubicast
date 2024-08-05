@@ -1,105 +1,128 @@
-import {get_string as getString} from 'core/str';
-import {component} from './common';
-import {getCorrTypes} from "./options";
-
 /**
  * Add a correction on the current selection.
  * @param {editor} editor
  * @returns {void}
  */
-function addCorrection(editor) {
-    let correction_types = getCorrTypes(editor);
+function insertMedia(editor) {
 
-    let correction_types_array = correction_types.split('\n').map((line) => {
-        let [value, text] = line.split('=');
-        return {text: text, value: value};
-    });
+    //get course id value from the current url
+    const urlParams = new URLSearchParams(window.location.search);
+    const course_id = parseInt(urlParams.get('course'));
 
-    editor.windowManager.open({
-        title: 'Add a correction',
-        body: {
-            type: 'panel',
-            items: [
-                {
-                    type: 'selectbox',
-                    name: 'correction_type',
-                    label: 'Correction type',
-                    items: correction_types_array
-                },
-                {
-                    type: 'textarea',
-                    name: 'correction_comment',
-                    label: 'Comment'
-                }
-            ]
-        },
-        buttons: [
-            {
-                type: 'submit',
-                text: 'OK'
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            //Create iframe content
+
+            const formId = 'id_resource_atto_ubicast_' + new Date().getTime();
+            const content = Y.Node.create(this.responseText);
+            content.set('id', formId);
+            /*const bottom = Y.Node.create('<div style="text-align: center;"></div>');
+            const submit = 'Insert';
+            bottom.append(Y.Node.create('<button type="submit" class="btn btn-primary">' + submit + '</button>'));
+            content.append(bottom);
+            content.on('submit', setVideo, self);*/
+            const fieldset = content.one('fieldset');
+            if (fieldset) {
+                // The fieldset can be null with Moodle < 4.0
+                fieldset.setStyle('overflow', 'auto');
+                fieldset.setStyle('padding', '20px');
+                fieldset.setStyle('max-height', 0.7 * window.innerHeight);
             }
-        ],
-        initialData: {
-            correction_type: 'none',
-            correction_comment: '',
-        },
-        onSubmit: (api) => {
-            const data = api.getData();
-            const correction_type = data.correction_type;
-            const correction_comment = data.correction_comment;
 
-            let whole_content = editor.getContent({format: 'html'});
-            let current_selection = editor.selection.getContent({});
-            let updated_selection =
-                `<span class="tiny_ubicast">
-                    ${current_selection}
-                    <span class="tiny_ubicast_correction">
-                        <sup title="${current_selection}">${correction_type}</sup>
-                        <span class="tiny_ubicast_comment">${correction_comment}</span>
-                    </span>
-                </span>`;
-            let updated_content = whole_content.replace(current_selection, updated_selection);
-            editor.setContent(updated_content);
-            api.close();
+            editor.windowManager.open({
+                title: 'Example plugin',
+                body: {
+                    type: 'panel',
+                    items: [
+                        {
+                            type: 'htmlpanel', // component type
+                            html: '<div id="content"></div>'
+                        },
+                    ]
+                },
+                buttons: [
+                    {
+                        type: 'cancel',
+                        text: 'Close'
+                    },
+                    {
+                        type: 'submit',
+                        text: 'Save',
+                        buttonType: 'primary'
+                    }
+                ],
+                onSubmit: (api) => {
+                    const video_link = create_video_link(course_id);
+                    editor.insertContent(video_link);
+                    api.close();
+                }
+            });
+            Y.one('#content').insert(content, 'after');
+            setTimeout(function () {
+                // Use setTimeout to wait for MediaSelector loading.
+                window.mediaSelector = new window.MediaSelector({
+                    moodleURL: window.M.cfg.wwwroot + '/mod/ubicast/lti.php?id=' + course_id,
+                    //TODO config
+                    nudgisURL: 'https://tstrec.unil.ch',
+                    filterBySpeaker: true,
+                    target: formId
+                });
+            }, (window.MediaSelector ? 10 : 2000));
         }
-    });
+    };
+    xhttp.open('GET', window.M.cfg.wwwroot + '/lib/editor/atto/plugins/ubicast/media.php', true);
+    xhttp.send();
 }
 
-/**
- * Remove the correction on the current selection or cursor position
- * @param {editor} editor
- */
-function removeCorrection(editor) {
-    let selection = editor.selection.getNode();
-    if (selection.classList.contains('tiny_ubicast')) {
-        selection.querySelector('.tiny_ubicast_correction').remove();
-        selection.attributes.removeNamedItem('class');
-    }
-
-}
 
 export const getSetup = async () => {
-    const [
-        addCorrectionButtonTitle,
-        removeCorrectionButtonTitle
-    ] = await Promise.all([
-        getString('button_addcorrection', component),
-        getString('button_removecorrection', component),
-    ]);
-
     return (editor) => {
 
-        // Register the add correction Toolbar Button.
-        editor.ui.registry.addButton(addCorrectionButtonTitle, {
-            icon: 'comment-add',
-            tooltip: "Add correction",
-            onAction: () => addCorrection(editor)
-        });
-
-        editor.ui.registry.addButton(removeCorrectionButtonTitle, {
-            icon: 'comment',
-            tooltip: "Remove correction",
-            onAction: () => removeCorrection(editor)
+        // Register the insert media Toolbar Button.
+        editor.ui.registry.addButton('insert_media', {
+            icon: 'user',
+            tooltip: "Insert media",
+            onAction: () => insertMedia(editor)
         });
     };
 };
+
+/**
+ * Function to retrieve the course id from the current page.
+ *
+ * @method create_video_link
+ * @param {string} course_id The course id.
+ * @return {string} The cource id.
+ * @private
+ */
+export function create_video_link(course_id) {
+
+    const media_id = document.getElementById('id_mediaid').value;
+    const media_width = document.getElementById('id_mediawidth').value;
+    const media_height = document.getElementById('id_mediaheight').value;
+    const media_thumb = document.getElementById('id_mediaimg').value || '/static/mediaserver/images/video.svg';
+
+    //TODO get values
+    const use_filter = false;
+    const ubicast_url = 'https://tstrec.unil.ch';
+
+    let video_url = '';
+    if (media_id) {
+        if (use_filter) {
+            const thumb_url = ubicast_url + media_thumb;
+            video_url = '<img class="atto_ubicast courseid_' + course_id + '_mediaid_'
+                + media_id + '" style="display: block; width: '
+                + media_width + '; height: ' + media_height + ' }};"' + ' src="' + thumb_url + '" alt=""/>';
+        } else {
+            const url = '/lib/editor/atto/plugins/ubicast/view.php?course=' + course_id + ' &video= + ' + media_id;
+            video_url = '<iframe class="nudgis-iframe" ' +
+                'style="width:' + media_width + '; height: ' + media_height + '; background-color: #ddd;" ' +
+                'src="' + window.M.cfg.wwwroot + url + '" ' +
+                ' allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen">' +
+                '</iframe>';
+        }
+    }
+
+    return video_url;
+}
