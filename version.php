@@ -31,3 +31,7 @@ $plugin->requires = 2022112800;
 $plugin->maturity = MATURITY_ALPHA;
 $plugin->supported = [401, 404];
 
+$plugin->dependencies = [
+    'mod_ubicast' => 2021010100,
+];
+
