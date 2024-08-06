@@ -49,7 +49,6 @@ export default new Promise(async(resolve) => {
         script.type = 'text/javascript';
         script.src = window.M.cfg.wwwroot + '/mod/ubicast/statics/media_selector.js?_=14';
         document.head.appendChild(script);
-        window.console.log(script);
     }
 
     // Reminder: Any asynchronous code must be run before this point.

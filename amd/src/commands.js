@@ -7,10 +7,8 @@ import {getCourseId, getUbicastURL, useFilter} from "./options";
 function insertMedia(editor) {
 
     const courseid = getCourseId(editor);
-    const usefilter = useFilter(editor);
+    const usefilter = useFilter(editor) === '1';
     const ubicastURL = getUbicastURL(editor);
-
-    window.console.log('Course id', courseid);
 
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
@@ -50,7 +48,6 @@ function insertMedia(editor) {
                     }
                 ],
                 onSubmit: (api) => {
-                    window.console.log('Course id', courseid);
                     const video_link = create_video_link(courseid, usefilter, ubicastURL);
                     editor.insertContent(video_link);
                     api.close();

@@ -15,7 +15,7 @@ export const register = (editor) => {
     // For each option, register it with the editor.
     // Valid type are defined in https://www.tiny.cloud/docs/tinymce/6/apis/tinymce.editoroptions/
     editor.options.register(usefilter, {
-        processor: 'boolean',
+        processor: 'string',
     });
     editor.options.register(ubicastURL, {
         processor: 'string',
