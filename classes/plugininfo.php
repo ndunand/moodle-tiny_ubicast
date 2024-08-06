@@ -13,10 +13,13 @@ class plugininfo extends plugin implements plugin_with_configuration {
         array $fpoptions,
         ?\editor_tiny\editor $editor = null
     ): array {
+
         return [
             // Your values go here.
             // These will be mapped to a namespaced EditorOption in Tiny.
-            'corrtypes' => get_config('tiny_ubicast', 'corrtypes')
+            'usefilter' => get_config('tiny_ubicast', 'usefilter'),
+            'ubicastURL' => trim(get_config('ubicast', 'ubicast_url'), '/'),
+            'courseid' => (int) $context->get_course_context()->instanceid,
         ];
     }
 

@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'tiny_ubicast';
 $plugin->release = '0.1';
-$plugin->version = 2024061304;
+$plugin->version = 2024061309;
 $plugin->requires = 2022112800;
 $plugin->maturity = MATURITY_ALPHA;
 $plugin->supported = [401, 404];

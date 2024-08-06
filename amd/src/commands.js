@@ -1,27 +1,24 @@
+import {getCourseId, getUbicastURL, useFilter} from "./options";
 /**
  * Add a correction on the current selection.
- * @param {editor} editor
+ * @param {tinyMCE} editor
  * @returns {void}
  */
 function insertMedia(editor) {
 
-    //get course id value from the current url
-    const urlParams = new URLSearchParams(window.location.search);
-    const course_id = parseInt(urlParams.get('course'));
+    const courseid = getCourseId(editor);
+    const usefilter = useFilter(editor);
+    const ubicastURL = getUbicastURL(editor);
+
+    window.console.log('Course id', courseid);
 
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             //Create iframe content
-
             const formId = 'id_resource_atto_ubicast_' + new Date().getTime();
             const content = Y.Node.create(this.responseText);
             content.set('id', formId);
-            /*const bottom = Y.Node.create('<div style="text-align: center;"></div>');
-            const submit = 'Insert';
-            bottom.append(Y.Node.create('<button type="submit" class="btn btn-primary">' + submit + '</button>'));
-            content.append(bottom);
-            content.on('submit', setVideo, self);*/
             const fieldset = content.one('fieldset');
             if (fieldset) {
                 // The fieldset can be null with Moodle < 4.0
@@ -36,7 +33,7 @@ function insertMedia(editor) {
                     type: 'panel',
                     items: [
                         {
-                            type: 'htmlpanel', // component type
+                            type: 'htmlpanel',
                             html: '<div id="content"></div>'
                         },
                     ]
@@ -53,7 +50,8 @@ function insertMedia(editor) {
                     }
                 ],
                 onSubmit: (api) => {
-                    const video_link = create_video_link(course_id);
+                    window.console.log('Course id', courseid);
+                    const video_link = create_video_link(courseid, usefilter, ubicastURL);
                     editor.insertContent(video_link);
                     api.close();
                 }
@@ -62,9 +60,8 @@ function insertMedia(editor) {
             setTimeout(function () {
                 // Use setTimeout to wait for MediaSelector loading.
                 window.mediaSelector = new window.MediaSelector({
-                    moodleURL: window.M.cfg.wwwroot + '/mod/ubicast/lti.php?id=' + course_id,
-                    //TODO config
-                    nudgisURL: 'https://tstrec.unil.ch',
+                    moodleURL: window.M.cfg.wwwroot + '/mod/ubicast/lti.php?id=' + courseid,
+                    nudgisURL: ubicastURL,
                     filterBySpeaker: true,
                     target: formId
                 });
@@ -92,20 +89,18 @@ export const getSetup = async () => {
  * Function to retrieve the course id from the current page.
  *
  * @method create_video_link
- * @param {string} course_id The course id.
+ * @param {number} course_id The course id.
+ * @param {boolean} use_filter The use filter option.
+ * @param {string} ubicast_url The ubicast url.
  * @return {string} The cource id.
  * @private
  */
-export function create_video_link(course_id) {
+export function create_video_link(course_id, use_filter, ubicast_url) {
 
     const media_id = document.getElementById('id_mediaid').value;
     const media_width = document.getElementById('id_mediawidth').value;
     const media_height = document.getElementById('id_mediaheight').value;
     const media_thumb = document.getElementById('id_mediaimg').value || '/static/mediaserver/images/video.svg';
-
-    //TODO get values
-    const use_filter = false;
-    const ubicast_url = 'https://tstrec.unil.ch';
 
     let video_url = '';
     if (media_id) {
