@@ -1,4 +1,5 @@
-import {component} from './common';
+import {icon, component} from './common';
+import {getButtonImage} from 'editor_tiny/utils';
 import {get_string as getString} from 'core/str';
 
 import {getCourseId, getUbicastURL, useFilter} from "./options";
@@ -81,14 +82,18 @@ async function insertMedia(editor) {
 export const getSetup = async () => {
     const [
         insertButtonName,
+        buttonImage,
     ] = await Promise.all([
         getString('inputsubmit', component),
+        getButtonImage('icon', component),
     ]);
 
     return (editor) => {
+        editor.ui.registry.addIcon(icon, buttonImage.html);
+
         // Register the insert media Toolbar Button.
         editor.ui.registry.addButton('insert_media', {
-            icon: 'user',
+            icon: icon,
             tooltip: insertButtonName,
             onAction: () => insertMedia(editor)
         });
