@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'atto_ubicast', language 'en'
+ * Strings for component 'tiny_ubicast', language 'en'
  *
- * @package    atto_ubicast
+ * @package    tiny_ubicast
  * @copyright  2019 UbiCast {@link https://www.ubicast.eu}
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,7 +28,7 @@ $string['width'] = 'Largeur';
 $string['height'] = 'Hauteur';
 $string['inputsubmit'] = 'Insérer';
 
-$string['privacy:metadata'] = 'Le plugin atto_ubicast ne stocke aucune information personnelle.';
+$string['privacy:metadata'] = 'Le plugin tiny_ubicast ne stocke aucune information personnelle.';
 
 $string['usefilter'] = 'Utiliser le filtre';
 $string['usefilter_desc'] = 'Utiliser filter_ubicast ; ceci permet l\'utilisation par les étudiants autant que par les enseignants. Laissez désactivé pour conserver le fonctionnement d\'origine.';

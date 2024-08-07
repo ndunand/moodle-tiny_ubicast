@@ -23,7 +23,7 @@ async function insertMedia(editor) {
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             //Create iframe content
-            const formId = 'id_resource_atto_ubicast_' + new Date().getTime();
+            const formId = 'id_resource_tiny_ubicast_' + new Date().getTime();
             const content = Y.Node.create(this.responseText);
             content.set('id', formId);
             const fieldset = content.one('fieldset');
@@ -74,7 +74,7 @@ async function insertMedia(editor) {
             }, (window.MediaSelector ? 10 : 2000));
         }
     };
-    xhttp.open('GET', window.M.cfg.wwwroot + '/lib/editor/atto/plugins/ubicast/media.php', true);
+    xhttp.open('GET', window.M.cfg.wwwroot + '/lib/editor/tiny/plugins/ubicast/media.php', true);
     xhttp.send();
 }
 
@@ -121,11 +121,11 @@ export function create_video_link(course_id, use_filter, ubicast_url) {
     if (media_id) {
         if (use_filter) {
             const thumb_url = ubicast_url + media_thumb;
-            video_url = '<img class="atto_ubicast courseid_' + course_id + '_mediaid_'
+            video_url = '<img class="tiny_ubicast courseid_' + course_id + '_mediaid_'
                 + media_id + '" style="display: block; width: '
                 + media_width + '; height: ' + media_height + ';"' + ' src="' + thumb_url + '" alt=""/>';
         } else {
-            const url = '/lib/editor/atto/plugins/ubicast/view.php?course=' + course_id + ' &video= + ' + media_id;
+            const url = '/lib/editor/tiny/plugins/ubicast/view.php?course=' + course_id + ' &video= + ' + media_id;
             video_url = '<iframe class="nudgis-iframe" ' +
                 'style="width:' + media_width + '; height: ' + media_height + '; background-color: #ddd;" ' +
                 'src="' + window.M.cfg.wwwroot + url + '" ' +

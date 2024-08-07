@@ -15,22 +15,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'tiny_ubicast', language 'en'
+ * ubicast tiny plugin media form view
  *
  * @package    tiny_ubicast
  * @copyright  2019 UbiCast {@link https://www.ubicast.eu}
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// Moodle required strings.
-$string['pluginname'] = 'Insert a media from Nudgis';
-$string['width'] = 'Width';
-$string['height'] = 'Height';
-$string['inputsubmit'] = 'Insert';
+require_once(__DIR__.'/../../../../../config.php');
+require_once(__DIR__.'/mod_form.php');
 
-$string['privacy:metadata'] = 'The tiny_ubicast plugin does not store any personal data.';
+$context = context_system::instance();
+require_login();
+require_capability('mod/ubicast:view', $context);
+$PAGE->set_context($context);
+$url = new moodle_url($CFG->dirroot.'/lib/editor/tiny/plugins/ubicast/media.php');
+$PAGE->set_url($url);
 
-$string['usefilter'] = 'Use filter';
-$string['usefilter_desc'] = 'Use filter_ubicast; this allows for usage by students as well as teachers. Leave unchecked unless advised otherwise.';
-$string['filternotinstalled'] = 'The filter_ubicast filter is not installed or is deactivated; this option is therefore not available.';
-$string['ubicast:use'] = 'Add a Nudgis resource';
+$mform = new mod_ubicast_mod_form();
+$mform->display();
