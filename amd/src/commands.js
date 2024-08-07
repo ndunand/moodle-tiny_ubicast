@@ -105,7 +105,7 @@ export function create_video_link(course_id, use_filter, ubicast_url) {
             const thumb_url = ubicast_url + media_thumb;
             video_url = '<img class="atto_ubicast courseid_' + course_id + '_mediaid_'
                 + media_id + '" style="display: block; width: '
-                + media_width + '; height: ' + media_height + ' }};"' + ' src="' + thumb_url + '" alt=""/>';
+                + media_width + '; height: ' + media_height + ';"' + ' src="' + thumb_url + '" alt=""/>';
         } else {
             const url = '/lib/editor/atto/plugins/ubicast/view.php?course=' + course_id + ' &video= + ' + media_id;
             video_url = '<iframe class="nudgis-iframe" ' +
