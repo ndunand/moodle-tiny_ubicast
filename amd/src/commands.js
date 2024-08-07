@@ -23,16 +23,10 @@ async function insertMedia(editor) {
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             //Create iframe content
-            const formId = 'id_resource_tiny_ubicast_' + new Date().getTime();
-            const content = Y.Node.create(this.responseText);
-            content.set('id', formId);
-            const fieldset = content.one('fieldset');
-            if (fieldset) {
-                // The fieldset can be null with Moodle < 4.0
-                fieldset.setStyle('overflow', 'auto');
-                fieldset.setStyle('padding', '20px');
-                fieldset.setStyle('max-height', 0.7 * window.innerHeight);
-            }
+            const form_id = 'id_resource_tiny_ubicast_' + new Date().getTime();
+            const content = document.createElement('div');
+            content.innerHTML = this.responseText;
+            content.querySelector('form').id = form_id;
 
             editor.windowManager.open({
                 title: panelTitle,
@@ -62,14 +56,14 @@ async function insertMedia(editor) {
                     api.close();
                 }
             });
-            Y.one('#ubicast_content').insert(content);
+            document.getElementById('ubicast_content').appendChild(content);
             setTimeout(function () {
                 // Use setTimeout to wait for MediaSelector loading.
                 window.mediaSelector = new window.MediaSelector({
                     moodleURL: window.M.cfg.wwwroot + '/mod/ubicast/lti.php?id=' + courseid,
                     nudgisURL: ubicastURL,
                     filterBySpeaker: true,
-                    target: formId
+                    target: form_id
                 });
             }, (window.MediaSelector ? 10 : 2000));
         }

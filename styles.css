@@ -4,3 +4,9 @@
     padding: .375rem .75rem;
 }
 
+#ubicast_content fieldset {
+    overflow: auto!important;
+    padding: 20px!important;
+    max-height: 70vh!important;
+}
+
