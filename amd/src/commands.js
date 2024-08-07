@@ -40,7 +40,7 @@ async function insertMedia(editor) {
                     items: [
                         {
                             type: 'htmlpanel',
-                            html: '<div id="content"></div>'
+                            html: '<div id="ubicast_content"></div>'
                         },
                     ]
                 },
@@ -61,7 +61,7 @@ async function insertMedia(editor) {
                     api.close();
                 }
             });
-            Y.one('#content').insert(content, 'after');
+            Y.one('#ubicast_content').insert(content);
             setTimeout(function () {
                 // Use setTimeout to wait for MediaSelector loading.
                 window.mediaSelector = new window.MediaSelector({
