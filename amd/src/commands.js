@@ -1,14 +1,22 @@
+import {component} from './common';
+import {get_string as getString} from 'core/str';
+
 import {getCourseId, getUbicastURL, useFilter} from "./options";
+
 /**
  * Add a correction on the current selection.
  * @param {tinyMCE} editor
  * @returns {void}
  */
-function insertMedia(editor) {
-
+async function insertMedia(editor) {
     const courseid = getCourseId(editor);
     const usefilter = useFilter(editor) === '1';
     const ubicastURL = getUbicastURL(editor);
+    const [
+        panelTitle,
+    ] = await Promise.all([
+        getString('pluginname', component),
+    ]);
 
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
@@ -26,7 +34,7 @@ function insertMedia(editor) {
             }
 
             editor.windowManager.open({
-                title: 'Example plugin',
+                title: panelTitle,
                 body: {
                     type: 'panel',
                     items: [
@@ -71,12 +79,17 @@ function insertMedia(editor) {
 
 
 export const getSetup = async () => {
-    return (editor) => {
+    const [
+        insertButtonName,
+    ] = await Promise.all([
+        getString('inputsubmit', component),
+    ]);
 
+    return (editor) => {
         // Register the insert media Toolbar Button.
         editor.ui.registry.addButton('insert_media', {
             icon: 'user',
-            tooltip: "Insert media",
+            tooltip: insertButtonName,
             onAction: () => insertMedia(editor)
         });
     };
