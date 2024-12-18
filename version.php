@@ -25,11 +25,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'tiny_ubicast';
-$plugin->release = '0.1';
-$plugin->version = 2024061309;
+$plugin->release = '1.0';
+$plugin->version = 2024121800;
 $plugin->requires = 2022112800;
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->supported = [401, 404];
+$plugin->maturity = MATURITY_STABLE;
+$plugin->supported = [401, 405];
 
 $plugin->dependencies = [
     'mod_ubicast' => 2021010100,
